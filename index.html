@@ -69,7 +69,7 @@ document.getElementById('wishlist').innerHTML = wishlist.map(w =>
   `</div><span class="tag ${w.s}">${w.sl}</span></div>`).join('');
 
 const techs = ["发球","接发球","正手","反手","截击","高压","Spacing（站位间距）","双打战术"];
-const prog = { "发球":0,"接发球":0,"正手":0,"反手":0,"截击":0,"高压":0,"Spacing（站位间距）":0,"双打战术":0 };
+const prog = { "发球":1,"接发球":1,"正手":0,"反手":0,"截击":0,"高压":0,"Spacing（站位间距）":0,"双打战术":0 };
 document.getElementById('progress').innerHTML = techs.map(t => {
   const p = prog[t]||0;
   return `<div class="tech"><div class="name">${t}</div><div class="blocks">` +
