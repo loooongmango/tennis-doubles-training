@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎾 网球双打训练记录</title>
+<style>
+  :root { --bg:#0d1512; --card:#16211c; --accent:#c8f04a; --accent2:#7ed957; --text:#eef4ec; --muted:#93a298; --dim:#243128; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif; padding:20px 16px 60px; max-width:880px; margin:0 auto; }
+  h1 { font-size:26px; margin-bottom:4px; }
+  .sub { color:var(--muted); font-size:14px; margin-bottom:6px; }
+  h2 { font-size:18px; margin:26px 0 12px; }
+  h2 .pct { font-size:13px; color:var(--muted); font-weight:400; }
+  .focus { background:linear-gradient(135deg,#1d3a24,#16211c); border:1px solid #2c5a35; border-radius:14px; padding:16px 18px; margin:16px 0 6px; }
+  .focus .k { font-size:12px; color:var(--muted); }
+  .focus .v { font-size:20px; font-weight:800; color:var(--accent); margin-top:4px; }
+  .item { background:var(--card); border-radius:14px; padding:14px 16px; margin-bottom:10px; display:flex; align-items:flex-start; gap:12px; }
+  .item .box { font-size:20px; }
+  .item .body { flex:1; }
+  .item .title { font-size:15px; font-weight:700; }
+  .item .note { font-size:13px; color:var(--muted); margin-top:4px; }
+  .tag { font-size:11px; padding:3px 10px; border-radius:12px; white-space:nowrap; margin-top:2px; }
+  .tag.todo { background:#2a2f1a; color:var(--accent); }
+  .tag.sched { background:#1c2f4a; color:#7db8ff; }
+  .tag.done { background:#1f4d33; color:var(--accent2); }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+  .tech { background:var(--card); border-radius:14px; padding:14px 16px; }
+  .tech .name { font-size:15px; font-weight:700; margin-bottom:8px; }
+  .blocks { font-size:18px; letter-spacing:3px; }
+  .empty { background:var(--card); border:1px dashed #3a4a3f; border-radius:14px; padding:22px; text-align:center; color:var(--muted); font-size:14px; }
+  .foot { margin-top:30px; color:var(--muted); font-size:12px; text-align:center; }
+</style>
+</head>
+<body>
+  <h1>🎾 网球双打训练记录</h1>
+  <p class="sub">每周重点 + 想练清单 + 训练复盘 + 视频资料库 · 数据来自 Notion</p>
+
+  <div class="focus">
+    <div class="k">🎯 本周重点</div>
+    <div class="v">Spacing（站位间距）+ 发球</div>
+  </div>
+
+  <h2>📋 想练清单 <span class="pct">练过就打勾</span></h2>
+  <div id="wishlist"></div>
+
+  <h2>📈 训练进度 <span class="pct">每掌握一项，填上一格 🟩</span></h2>
+  <div class="grid" id="progress"></div>
+
+  <h2>📝 训练记录</h2>
+  <div id="sessions"></div>
+
+  <h2>🎬 视频资料库</h2>
+  <div id="videos"></div>
+
+  <p class="foot">两个 Muse / 两人共同维护 · 更新只需 push 到仓库，约 1 分钟后页面自动刷新</p>
+
+<script>
+const wishlist = [
+  { t:"小场连续对打 100 个不掉", s:"todo", sl:"待练", n:"目标连续 100 板不失误" },
+  { t:"spacing（站位间距）+ 发球", s:"sched", sl:"已安排", n:"本周重点" },
+  { t:"小场击球练习一小时", s:"todo", sl:"待练", n:"" },
+];
+const boxIcon = { todo:"⬜", sched:"📅", done:"✅" };
+document.getElementById('wishlist').innerHTML = wishlist.map(w =>
+  `<div class="item"><div class="box">${boxIcon[w.s]}</div><div class="body">` +
+  `<div class="title">${w.t}</div>${w.n?`<div class="note">${w.n}</div>`:''}` +
+  `</div><span class="tag ${w.s}">${w.sl}</span></div>`).join('');
+
+const techs = ["发球","接发球","正手","反手","截击","高压","Spacing（站位间距）","双打战术"];
+const prog = { "发球":0,"接发球":0,"正手":0,"反手":0,"截击":0,"高压":0,"Spacing（站位间距）":0,"双打战术":0 };
+document.getElementById('progress').innerHTML = techs.map(t => {
+  const p = prog[t]||0;
+  return `<div class="tech"><div class="name">${t}</div><div class="blocks">` +
+    "🟩".repeat(p) + "⬜".repeat(5-p) + `</div></div>`;
+}).join('');
+
+const sessions = [];
+document.getElementById('sessions').innerHTML = sessions.length ? sessions.map(s =>
+  `<div class="item"><div class="body"><div class="title">${s.date} · ${s.title}</div><div class="note">${s.body}</div></div></div>`
+).join('') : `<div class="empty">还没有训练记录，每次训练后来这里打卡一条 📝</div>`;
+
+const videos = [];
+document.getElementById('videos').innerHTML = videos.length ? videos.map(v =>
+  `<div class="item"><div class="body"><div class="title"><a href="${v.url}" style="color:var(--accent)">${v.title}</a></div><div class="note">${v.note}</div></div></div>`
+).join('') : `<div class="empty">看到好的教学视频，链接丢进来，附上技术要点 🎬</div>`;
+</script>
+</body>
+</html>
